@@ -19,11 +19,12 @@ This kit builds a complete ConfigMgr Current Branch 2111 infrastructure running 
       - [Optional: Populate the hydration deployment share with files for MDT01](#optional-populate-the-hydration-deployment-share-with-files-for-mdt01)
     - [Step 4: Create the bootable Hydration Kit ISO (MDT offline media item)](#step-4-create-the-bootable-hydration-kit-iso-mdt-offline-media-item)
     - [Step 5: Create and Deploy the virtual machines](#step-5-create-and-deploy-the-virtual-machines)
-  - [Customizing the Hydration Kit](#next-steps----customizing-the-hydration-kit)
+  - [Customizing the Hydration Kit](#next-steps-customizing-the-hydration-kit)
 
 **Hydration Kit Video:** Check out the free mini course at the ViaMonstra Online Academy covering the Hydration Kit setup (and many other tips and tricks related for creating a lab for ConfigMgr, MDT and Intune): [Building the Perfect Lab for ConfigMgr, MDT, and Intune](https://academy.viamonstra.com/courses/mini-course-building-the-perfect-lab-for-configmgr-mdt-and-Intune-q4-2021-edition).
 
 ![Training](docs/SnapshotFromTraining-w700.jpg)
+
 *Sample screenshot from the free mini course on ViaMonstra Online Academy.*
 
 **Credits:** Special thanks to Sven Aelterman for creating the script for configuring SQL Server 2017 Reporting Services, and for graciously allowing me to include it in the hydration kit.
@@ -105,6 +106,7 @@ Then, for the main servers (DC01 and CM01), you need to download the following s
 >**Note:** To download the ConfigMgr prerequisites, you run the \SMSSETUP\BIN\X64\setupdl.exe application from the ConfigMgr installation files and simply provide a folder for the download.
 
 ![Running setupdl.exe to download ConfigMgr pre-requisites.](docs/image-3.png)
+
 *Running setupdl.exe to download ConfigMgr pre-requisites.*
 
 Windows ADK for Windows 11 and the ADK WinPE Addon for Windows 11: <https://docs.microsoft.com/en-us/windows-hardware/get-started/adk-install>
@@ -112,9 +114,11 @@ Windows ADK for Windows 11 and the ADK WinPE Addon for Windows 11: <https://docs
 **Note:** To download the complete standalone Windows ADK for Windows 11 setup, run `adksetup.exe /layout "C:\Setup\Windows ADK 11"` for the core ADK, and then `adkwinpesetup.exe /layout "C:\Setup\Windows ADK 11 WinPE Addon"` for the WinPE Addon.
 
 ![Windows ADK 11 setup files.](docs/ADk11-1.png)
+
 *Windows ADK 11 setup files.*
 
 ![The Windows ADK 11 WinPE Addon files](docs/ADk11WinPEAddon.png)
+
 *The Windows ADK 11 WinPE Addon files*
 
 #### Optional Servers
@@ -126,6 +130,7 @@ The FS01 and DP01 optional servers don't need any extra software, but for the MD
 >**Note:** Use the SQLServer2017-SSEI-Expr.exe web installer to download the Express Core media (SQLEXPR_x64_ENU.exe)
 
 ![Using the SQLServer2017-SSEI-Expr.exe web installer to download media.](docs/image-6.png)
+
 *Using the SQLServer2017-SSEI-Expr.exe web installer to download media.*
 
 ### Step 2: Install the Hydration Kit
@@ -142,6 +147,7 @@ Installing the Hydration Kit requires that you first install Windows ADK and the
     - User State Migration Tool (USMT)
 
 ![Running the Windows ADK 11 Setup.](docs/ADK11Setup.png)
+
 *Running the Windows ADK 11 Setup.*
 
 >**Note:** The last three are not used by the hydration kit, but are still quite useful to have, so I usually install them too.
@@ -149,11 +155,13 @@ Installing the Hydration Kit requires that you first install Windows ADK and the
 2. Install **Windows ADK 11 WinPE Addon** (adkwinpesetup.exe) with the default settings.
 
 ![Running the Windows ADK 11 WinPE Addon Setup.](docs/ADk11WinPEAddonSetup.png)
+
 *Running the Windows ADK 11 WinPE Addon Setup.*
 
 3. Install **MDT 8456** (MicrosoftDeploymentToolkit_x64.msi) with the default settings.
 
 ![Running the MDT 8456 Setup.](docs/MDTSetup.png)
+
 *Running the MDT 8456 Setup.*
 
 4. Install the **MDT 8456 Hotfix**.
@@ -175,6 +183,7 @@ Installing the Hydration Kit requires that you first install Windows ADK and the
 You should now have the following folder containing a few sub-folders and a PowerShell script: **C:\HydrationKit**
 
 ![The extracted hydration kit files.](docs/HydrationKitFolder.png)
+
 *The extracted hydration kit files.*
 
 2. In an elevated PowerShell command prompt, navigate to the **C:\HydrationKit** folder, and create the hydration deployment share by running the following command:  
@@ -184,6 +193,7 @@ You should now have the following folder containing a few sub-folders and a Powe
 3. Open the **Deployment Workbench**, and look around. You should see applications, operating systems, and task sequences etc.
 
 ![Opening the Hydration Kit deployment share in Deployment Workbench.](docs/WorkBenchWithApplications-1.png)
+
 *Opening the Hydration Kit deployment share in Deployment Workbench.*
 
 ## Step 3: Copy the downloaded software to the Hydration Kit
@@ -197,62 +207,72 @@ Next step is to start copying the various installation files to the correct fold
 **Note #2:** If your CM01 does not have Internet access during the Hydration Kit build, make sure to also copy the **microsoft-windows-netfx3-ondemand-package~31bf3856ad364e35~amd64~~.cab** file to the following folder: **C:\CMLab\DS\Operating Systems\WS2019\sources\sxs**
 
 ![The Windows Server 2019 Standard image copied.](docs/WS2019RefImage.png)
+
 *The Windows Server 2019 Standard image copied.*
 
-2\. Copy the **BGInfo** file (bginfo.exe) to the following folder: **C:**\HydrationCMWS2019\**DS\Applications\Install -- BGInfo\Source**
+2\. Copy the **BGInfo** file (bginfo.exe) to the following folder: **C:\HydrationCMWS2019\DS\Applications\Install -- BGInfo\Source**
 
 ![BGInfo copied.](docs/BGInfo.png)
+
 *BGInfo copied.*
 
 3\. Copy the **Windows ADK 11** setup files (1.6 GB) to the following folder:\
 **C:\CMLab\DS\Applications\Install -- Windows ADK 11\Source**
 
 ![The Windows ADK 11 setup files copied.](docs/ADK11Copied.png)
+
 *The Windows ADK 11 setup files copied.*
 
 4\. Copy the **Windows ADK 11 WinPE Addon** setup files (3 GB) to the following folder:\
 **C:\CMLab\DS\Applications\Install -- WinPE Addon for Windows ADK 11\Source**
 
 ![Windows ADK 11 WinPE Addon setup files copied.](docs/ADK11WinPECopied.png)
+
 *Windows ADK 11 WinPE Addon setup files copied.*
 
 5\. Copy the **SQL Server 2017 Standard x64** setup files (the content of the ISO, not the actual ISO) to the following folder:\
-**C:\CMLab\DS\Applications\Install -- SQL Server 2017\Source**
+**C:\CMLab\DS\Applications\Install - SQL Server 2017\Source**
 
 ![SQL Server 2017 Standard x64 setup files copied.](docs/SQL2017Copied.png)
+
 *SQL Server 2017 Standard x64 setup files copied.*
 
 6\. In the **C:\CMLab\DS\Applications\Install -- SQL Server 2017\Source** folder, create a subfolder named **Updates**, and copy thelatest **SQL Server 2017 CU** setup file (CU 20 when I wrote this guide) to it.
 
 ![The SQL Server 2017 CU copied to Updates folder.](docs/SQL2017CUCopied.png)
+
 *The SQL Server 2017 CU copied to Updates folder.*
 
 7\. Copy the **SQL Server Management Studio** setup file to the following folder:\
-**C:\CMLab\DS\Applications\Install -- SQL Server Management Studio**
+**C:\CMLab\DS\Applications\Install - SQL Server Management Studio**
 
 ![The SQL Server Management Studio setup file copied.](docs/SSMSCopied.png)
+
 *The SQL Server Management Studio setup file copied.*
 
 8\. Copy the **SQL Server 2017 Reporting Services** setup file to the following folder:\
-**C:\CMLab\DS\Applications\Install -- SQL Server 2017 Reporting Services\Source**
+**C:\CMLab\DS\Applications\Install - SQL Server 2017 Reporting Services\Source**
 
 ![SQL Server Reporting Services setup files copied.](docs/SSRSCopied.png)
+
 *SQL Server Reporting Services setup files copied.*
 
 9\. Copy the **ConfigMgr 2103** setup files (extract the download) to the following folder:\
-**C:\CMLab\DS\Applications\Install -- ConfigMgr\Source**
+**C:\CMLab\DS\Applications\Install - ConfigMgr\Source**
 
 ![ConfigMgr setup files copied.](docs/CMCopied.png)
+
 *ConfigMgr setup files copied.*
 
 10\. Copy the **ConfigMgr 2013 PreReqs** setup files to the following folder:\
-**C:\CMLab\DS\Applications\Install -- ConfigMgr\PreReqs**
+**C:\CMLab\DS\Applications\Install - ConfigMgr\PreReqs**
 
 ![ConfigMgr Pre-requisite files copied, showing a subset of the files.](docs/CMPreReqsCopied.png)
+
 *ConfigMgr Pre-requisite files copied, showing a subset of the files.*
 
 11\. Copy the **MDT 8456** setup file (MicrosoftDeploymentToolkit_x64.msi) to the following folder:\
-**C:\CMLab\DS\Applications\Install -- MDT**
+**C:\CMLab\DS\Applications\Install - MDT**
 
 ![MDT 8456 copied.](docs/MDTCopied.png)
 
@@ -263,9 +283,10 @@ Next step is to start copying the various installation files to the correct fold
 **Note:** These steps are only needed if you want to deploy the optional MDT01 virtual machine. If you don't need this VM, simply skip to the next section: "Create the Hydration Kit ISO (MDT offline media item)"
 
 1\. Copy the SQL Server 2017 Express setup file (SQLEXPR_x64_ENU.exe) to the following folder:\
-**C:\CMLab\DS\Applications\Install -- SQL Server 2017 Express\Source**
+**C:\CMLab\DS\Applications\Install - SQL Server 2017 Express\Source**
 
 ![SQL Server 2017 Express setup file copied.](https://www.deploymentresearch.com/wp-content/uploads/2021/11/H1.png)
+
 *SQL Server 2017 Express setup file copied.*
 
 ## Step 4: Create the bootable Hydration Kit ISO (MDT offline media item)
@@ -369,7 +390,7 @@ Once the domain controller (DC01) is up and running, you can deploy the optional
 - Network: **Your lab network**
 - Image file (ISO): **C:\CMLab\ISO\HydrationCMWS2019.iso**
 
-## Next Steps -- Customizing the Hydration Kit
+## Next Steps: Customizing the Hydration Kit
 
 Below is a quick walk through of items to change if you need to customize the kit.  For a broader scope, please see the post [Customizing the ViaMonstra Hydration Kit](https://deploymentresearch.com/601/Customizing-the-ViaMonstra-Hydration-Kit).
 
@@ -383,11 +404,11 @@ If you need to change server names, IP addresses, domain names, installation, pa
 
 For **ConfigMgr (CM01)** you need to update the following files::
 
-- C:\CMLab\DS\Applications\Install -- ConfigMgr\ConfigMgrUnattend.ini
-- C:\CMLab\DS\Applications\Install -- SQL Server 2017\ConfigurationFile.ini
+- C:\CMLab\DS\Applications\Install - ConfigMgr\ConfigMgrUnattend.ini
+- C:\CMLab\DS\Applications\Install - SQL Server 2017\ConfigurationFile.ini
 
-If you need to change the various service accounts, you need to to modify the **Configure-CreateADStructure.wsf** script in the **C:\CMLab\DS\Applications\Configure -- Create AD Structure\
-**folder.
+If you need to change the various service accounts, you need to to modify the **Configure-CreateADStructure.wsf** script in the 
+**C:\CMLab\DS\Applications\Configure - Create AD Structure** folder.
 
 If you change the Administrator password, and/or domain name, you also need to update the **Authorize DHCP** credentials in the **DC01** task sequence.
 
