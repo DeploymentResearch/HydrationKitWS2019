@@ -19,7 +19,7 @@ This kit builds a complete ConfigMgr Current Branch 2111 infrastructure running 
       - [Optional: Populate the hydration deployment share with files for MDT01](#optional-populate-the-hydration-deployment-share-with-files-for-mdt01)
     - [Step 4: Create the bootable Hydration Kit ISO (MDT offline media item)](#step-4-create-the-bootable-hydration-kit-iso-mdt-offline-media-item)
     - [Step 5: Create and Deploy the virtual machines](#step-5-create-and-deploy-the-virtual-machines)
-  - [Option Post-ConfigMgr Install Tasks](#next-steps-optional-post-configmgr-install-tasks)
+  - [Optional Post-ConfigMgr Install Tasks](#next-steps-optional-post-configmgr-install-tasks)
   - [Customizing the Hydration Kit](#next-steps-customizing-the-hydration-kit)
 
 **Hydration Kit Video:** Check out the free mini course at the ViaMonstra Online Academy covering the Hydration Kit setup (and many other tips and tricks related for creating a lab for ConfigMgr, MDT and Intune): [Building the Perfect Lab for ConfigMgr, MDT, and Intune](https://academy.viamonstra.com/courses/mini-course-building-the-perfect-lab-for-configmgr-mdt-and-Intune-q4-2021-edition).
