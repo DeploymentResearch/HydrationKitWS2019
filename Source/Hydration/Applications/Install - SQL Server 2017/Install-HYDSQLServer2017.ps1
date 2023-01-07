@@ -123,6 +123,23 @@ $SetupFile = "$SourcePath\Source\Setup.exe"
 $ConfigurationFile = "$SourcePath\ConfigurationFile.ini"
 $Arguments = "/configurationfile=""$ConfigurationFile"""
 
+# If SQLSYSADMINACCOUNTS is specified in the CM01.INI file, copy configuration file to a temporary location so it can be updated
+$tsenv = New-Object -COMobject Microsoft.SMS.TSEnvironment
+$SQLSYSADMINACCOUNTS = $tsenv.Value("SQLSYSADMINACCOUNTS")
+If ($SQLSYSADMINACCOUNTS -ne ""){
+    $TempFolder = "C:\Windows\Temp"
+    Copy-Item -Path $ConfigurationFile -Destination $TempFolder
+    $FinalConfigurationFile = "$TempFolder\ConfigurationFile.ini"
+    $ConfigurationFileData = Get-Content $FinalConfigurationFile 
+    $OriginalSQLSYSADMINACCOUNTS = "SQLSYSADMINACCOUNTS=`"VIAMONSTRA\Administrator`" `"BUILTIN\Administrators`""
+    $UpdatedSQLSYSADMINACCOUNTS = "SQLSYSADMINACCOUNTS=`"$SQLSYSADMINACCOUNTS`" `"BUILTIN\Administrators`"" # always add local administrators
+    $ConfigurationFileData | ForEach-Object { $_.replace("$OriginalSQLSYSADMINACCOUNTS","$UpdatedSQLSYSADMINACCOUNTS") } | Set-Content $ConfigurationFileData
+}
+Else{
+    $FinalConfigurationFile = $ConfigurationFile
+}
+
+
 # Validation
 if (!(Test-Path -path $SetupFile)) {Write-HYDLog "Could not find SQL Server Setup files, aborting..." -LogLevel 2;Break}
 if (!(Test-Path -path $ConfigurationFile)) {Write-HYDLog "Could not find SQL Server configuration files, aborting..." -LogLevel 2;Break}
