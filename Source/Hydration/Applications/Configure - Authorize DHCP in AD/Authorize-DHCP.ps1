@@ -2,7 +2,7 @@
 
 ************************************************************************************************************************
 
-Created:	2019-04-22
+Created:	2021-11-22
 Version:	1.0
 
 Disclaimer:
@@ -109,44 +109,21 @@ Function Write-HYDLog{
 }
 
 Set-HYDLogPath
-write-HYDLog -Message "Starting setup... "
+write-HYDLog -Message "Starting configuration... "
 
-# Figure out Source path
-If($psISE){
-    $SourcePath = Split-Path -parent $psISE.CurrentFile.FullPath
-}
-else{
-    $SourcePath = $PSScriptRoot
-}
+# Selecting the first network adapter
+$Interface = Get-NetAdapter -Name *Ethernet* | Select -First 1
+$ifIndex = Get-NetIPAddress -InterfaceIndex $Interface.ifIndex -AddressFamily IPv4
+$IPAddress = $ifIndex.IPv4Address
 
-$SetupFile = "$SourcePath\Source\Setup.exe"
-$ConfigurationFile = "$SourcePath\ConfigurationFile.ini"
-$Arguments = "/configurationfile=""$ConfigurationFile"""
+write-HYDLog -Message "The DHCP Server have the IP address: $IPAddress"
 
-# If SQLSYSADMINACCOUNTS is specified in the CM01.INI file, copy configuration file to a temporary location so it can be updated
-$tsenv = New-Object -COMobject Microsoft.SMS.TSEnvironment
-$SQLSYSADMINACCOUNTS = $tsenv.Value("SQLSYSADMINACCOUNTS")
-If ($SQLSYSADMINACCOUNTS -ne ""){
-    $TempFolder = "C:\Windows\Temp"
-    Copy-Item -Path $ConfigurationFile -Destination $TempFolder
-    $FinalConfigurationFile = "$TempFolder\ConfigurationFile.ini"
-    $ConfigurationFileData = Get-Content $FinalConfigurationFile 
-    $OriginalSQLSYSADMINACCOUNTS = "SQLSYSADMINACCOUNTS=`"VIAMONSTRA\Administrator`" `"BUILTIN\Administrators`""
-    $UpdatedSQLSYSADMINACCOUNTS = "SQLSYSADMINACCOUNTS=`"$SQLSYSADMINACCOUNTS`" `"BUILTIN\Administrators`"" # always add local administrators
-    $ConfigurationFileData | ForEach-Object { $_.replace("$OriginalSQLSYSADMINACCOUNTS","$UpdatedSQLSYSADMINACCOUNTS") } | Set-Content $ConfigurationFileData
-}
-Else{
-    $FinalConfigurationFile = $ConfigurationFile
-}
+# Authorize DHCP SERVER
+Add-DhcpServerInDC -DnsName $env:COMPUTERNAME -IPAddress $IPAddress
+write-HYDLog -Message "The Server with the name $env:COMPUTERNAME is Authorized in Active Directory"
 
-
-# Validation
-if (!(Test-Path -path $SetupFile)) {Write-HYDLog "Could not find SQL Server Setup files, aborting..." -LogLevel 2;Break}
-if (!(Test-Path -path $ConfigurationFile)) {Write-HYDLog "Could not find SQL Server configuration files, aborting..." -LogLevel 2;Break}
-
-# Install SQL Server
-Write-HYDLog "About to run the following command: $SetupFile $Arguments" 
-Start-Process -FilePath $SetupFile -ArgumentList $Arguments -NoNewWindow -Wait -Passthru
-
-Write-HYDLog "Setup completed..." 
+# Notify Server Manager that AD and DHCP configuration are completed
+write-HYDLog -Message "Removing AD and DHCP Flag in Server Manager"
+set-ItemProperty HKLM:\SOFTWARE\Microsoft\ServerManager\Roles\12 -name ConfigurationState -Value 0x000000002
+set-ItemProperty HKLM:\SOFTWARE\Microsoft\ServerManager\Roles\10 -name ConfigurationStatus -Value 0x000000002
 

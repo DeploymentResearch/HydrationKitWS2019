@@ -785,15 +785,12 @@
       </defaultVarList>
       <action>cscript.exe "%SCRIPTROOT%\ZTIConfigureDHCP.wsf"</action>
     </step>
-    <step type="BDD_AuthorizeDHCP" name="Authorize DHCP" description="" disable="false" continueOnError="false" startIn="" successCodeList="0 3010" runIn="WinPEandFullOS">
+    <step type="BDD_InstallApplication" name="Configure - Authorize DHCP in AD" description="" disable="false" continueOnError="false" runIn="WinPEandFullOS" successCodeList="0 3010">
       <defaultVarList>
-        <variable name="PackageID" property="PackageID" />
-        <variable name="RunAsUser" property="RunAsUser">true</variable>
-        <variable name="SMSTSRunCommandLineUserName" property="SMSTSRunCommandLineUserName">VIAMONSTRA\Administrator</variable>
-        <variable name="SMSTSRunCommandLineUserPassword" property="SMSTSRunCommandLineUserPassword">P@ssw0rd</variable>
-        <variable name="LoadProfile" property="LoadProfile">false</variable>
+        <variable name="ApplicationGUID" property="ApplicationGUID">{6990c450-e641-4022-81ca-7386ae77b17d}</variable>
+        <variable name="ApplicationSuccessCodes" property="ApplicationSuccessCodes">0 3010</variable>
       </defaultVarList>
-      <action>%TOOLROOT%\bddrun.exe /runas cscript.exe "%SCRIPTROOT%\ZTIAuthorizeDHCP.wsf"</action>
+      <action>cscript.exe "%SCRIPTROOT%\ZTIApplications.wsf"</action>
     </step>
     <action />
     <condition />
