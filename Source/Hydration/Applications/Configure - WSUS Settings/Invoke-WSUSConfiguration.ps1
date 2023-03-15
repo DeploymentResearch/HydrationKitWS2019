@@ -1,4 +1,10 @@
-﻿# WSUS Administration Max Connections Should be Unlimited	
+﻿$TSEnv = New-Object -COMObject Microsoft.SMS.TSEnvironment 
+$Deployroot = $tsenv.Value("DeployRoot")
+$env:PSModulePath = $env:PSModulePath + ";$deployRoot\Tools\Modules"
+
+Import-Module -Name HydrationLogging
+
+# WSUS Administration Max Connections Should be Unlimited	
 Import-Module webadministration ; (get-itemproperty IIS:\Sites\'WSUS Administration' -name limits.maxConnections.Value)
 Import-Module webadministration ; set-Itemproperty IIS:\Sites\'WSUS Administration' -Name limits.maxConnections -Value 4294967295
 
