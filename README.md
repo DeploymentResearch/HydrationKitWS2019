@@ -292,6 +292,10 @@ Next step is to start copying the various installation files to the correct fold
 11\. Copy the **MDT 8456** setup file (MicrosoftDeploymentToolkit_x64.msi) to the following folder:\
 **C:\CMLab\DS\Applications\Install - MDT**
 
+![MDT 8456 copied.](docs/MDTCopied.png)
+
+*MDT 8456 copied.*
+
 12\. Copy your **Windows 10 reference image** (must be named **REFW10X64-001.wim**, case sensitive), to the following folder: **C:\CMLab\DS\Operating Systems\Windows 10**
 
 **Note #1:** The WIM image should only have a single index with the **Windows 10 Enterprise** edition. Please use the script to extract the correct index from a Windows 10 ISO file.
@@ -307,12 +311,6 @@ Next step is to start copying the various installation files to the correct fold
 ![The Windows 10 Standard image copied.](docs/W11-WIM-Copied.png)
 
 *The Windows 11 Enterprise image copied.*
-
-
-
-![MDT 8456 copied.](docs/MDTCopied.png)
-
-*MDT 8456 copied.*
 
 ### Optional: Populate the hydration deployment share with files for MDT01
 
@@ -434,7 +432,7 @@ Once the domain controller (DC01) is up and running, you can deploy the optional
 - Hard drive: **60 GB** (dynamic disk)
 - Memory: **4 GB** (static memory)
 - Network: **Your lab network**
-- Image file (ISO): **C:\CMLab\ISO\HydrationCMWS2022.iso**
+- Image file (ISO): **C:\CMLab\ISO\HydrationCMWS2019.iso**
 
 ## Next Steps - Optional Post-ConfigMgr Install Tasks
 
