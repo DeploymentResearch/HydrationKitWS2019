@@ -1,6 +1,6 @@
 # Hydration Kit For Windows Server 2019, SQL Server 2017 and ConfigMgr Current Branch
 
-This kit builds a complete ConfigMgr Current Branch 2111 infrastructure running on Windows Server 2019 and SQL Server 2017. This kit is tested on both Hyper-V and VMware virtual platforms, but should work fine on any virtualization platform that can boot from an ISO file. This kit now adds and configures SQL Server Reporting Services, and has been updated for Windows 11 support. Another update is that you can now specify which path to install the hydration kit on.
+This kit builds a complete **ConfigMgr Current Branch 2111** infrastructure running on **Windows Server 2019** and **SQL Server 2017**, including optional **Windows 10** and **Windows 11** clients. This kit is tested on both Hyper-V and VMware virtual platforms, but should work fine on any virtualization platform that can boot from an ISO file. This kit now adds and configures SQL Server Reporting Services, and has been updated for Windows 11 support. Another update is that you can now specify which path to install the hydration kit on.
 
 - [Hydration Kit For Windows Server 2019, SQL Server 2017 and ConfigMgr Current Branch](#hydration-kit-for-windows-server-2019-sql-server-2017-and-configmgr-current-branch)
   - [Notes](#notes)
@@ -8,6 +8,7 @@ This kit builds a complete ConfigMgr Current Branch 2111 infrastructure running 
     - [Servers](#servers)
       - [Main servers](#main-servers)
       - [Optional supporting servers](#optional-supporting-servers)
+    - [Clients](#clients)
   - [Setup Overview](#setup-overview)
   - [Step-by-Step Guides](#step-by-step-guides)
     - [Step 1: Download the software](#step-1-download-the-software)
@@ -67,6 +68,14 @@ This kit allows you to automatically deploy the below list of servers. The serve
 - MDT01. Windows Server 2019, SQL Server 2017 Express, and MDT 8456
 - FS01. Windows Server 2019, File Server
 - DP01. Windows Server 2019, additional ConfigMgr DP
+
+### Clients
+This kit also allows you to automatically deploy the below list of clients for management. 
+
+- **PC001**. Windows 10 Enterprise
+- **PC002**. Windows 10 Enterprise
+- **PC003**. Windows 11 Enterprise
+- **PC004**. Windows 11 Enterprise
 
 ## Setup Overview
 
@@ -133,6 +142,14 @@ The FS01 and DP01 optional servers don't need any extra software, but for the MD
 ![Using the SQLServer2017-SSEI-Expr.exe web installer to download media.](docs/image-6.png)
 
 *Using the SQLServer2017-SSEI-Expr.exe web installer to download media.*
+
+#### Optional Clients
+
+For the optional clients, you also need to download the following software:
+
+- A Windows 10 Enterprise WIM image (single index, fully updated). The easiest way to get one is to download an already updated Windows 10 ISO file, and then run this PowerShell script: <https://github.com/DeploymentResearch/DRFiles/blob/master/Scripts/Export-Windows10EnterpriseWIMFromISO.ps1>
+-  A Windows 11 Enterprise WIM image (single index, fully updated). The easiest way to get one is to download an already updated Windows 11 ISO file, and then run this PowerShell script: <https://github.com/DeploymentResearch/DRFiles/blob/master/Scripts/Export-Windows11EnterpriseWIMFromISO.ps1>
+
 
 ### Step 2: Install the Hydration Kit
 
@@ -275,6 +292,24 @@ Next step is to start copying the various installation files to the correct fold
 11\. Copy the **MDT 8456** setup file (MicrosoftDeploymentToolkit_x64.msi) to the following folder:\
 **C:\CMLab\DS\Applications\Install - MDT**
 
+12\. Copy your **Windows 10 reference image** (must be named **REFW10X64-001.wim**, case sensitive), to the following folder: **C:\CMLab\DS\Operating Systems\Windows 10**
+
+**Note #1:** The WIM image should only have a single index with the **Windows 10 Enterprise** edition. Please use the script to extract the correct index from a Windows 10 ISO file.
+
+![The Windows 10 Standard image copied.](docs/W10-WIM-Copied.png)
+
+*The Windows 10 Enterprise image copied.*
+
+13\. Copy your **Windows 11 reference image** (must be named **REFW11X64-001.wim**, case sensitive), to the following folder: **C:\CMLab\DS\Operating Systems\Windows 11**
+
+**Note #1:** The WIM image should only have a single index with the **Windows 11 Enterprise** edition. Please use the script to extract the correct index from a Windows 11 ISO file.
+
+![The Windows 10 Standard image copied.](docs/W11-WIM-Copied.png)
+
+*The Windows 11 Enterprise image copied.*
+
+
+
 ![MDT 8456 copied.](docs/MDTCopied.png)
 
 *MDT 8456 copied.*
@@ -390,6 +425,16 @@ Once the domain controller (DC01) is up and running, you can deploy the optional
 - Memory: **4 GB** (static memory)
 - Network: **Your lab network**
 - Image file (ISO): **C:\CMLab\ISO\HydrationCMWS2019.iso**
+
+#### **Deploying PC0001-4 (Optional)**
+Once the domain controller (DC01) is up and running, you can deploy the optional PC0001-4 virtual machine(s). Don't forget to leave DC01 running while deploying PC0001-4 since they are joining the domain during deployment. Use the following settings for the PC0001-4 virtual machine(s):
+
+- Name: **PC0001** / **PC0002** / **PC0003** / **PC0004**
+- CPU: **2 vCPU**
+- Hard drive: **60 GB** (dynamic disk)
+- Memory: **4 GB** (static memory)
+- Network: **Your lab network**
+- Image file (ISO): **C:\CMLab\ISO\HydrationCMWS2022.iso**
 
 ## Next Steps - Optional Post-ConfigMgr Install Tasks
 
